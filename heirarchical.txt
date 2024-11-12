@@ -1,0 +1,38 @@
+import pandas as pd
+
+df = pd.read_csv('Mall_Customers.csv')
+
+df.head()
+
+x = df[['Annual Income (k$)','Spending Score (1-100)']]
+
+x
+
+import matplotlib.pyplot as plt
+
+plt.xlabel('spending')
+plt.ylabel('annual')
+plt.scatter(x['Annual Income (k$)'],x['Spending Score (1-100)'])
+
+from sklearn.cluster import AgglomerativeClustering
+
+silh = []
+
+from sklearn.metrics import silhouette_score
+
+for i in range(2,10):
+    aggl = AgglomerativeClustering(n_clusters=i)
+    labels = aggl.fit_predict(x)
+    score = silhouette_score(x,labels)
+    silh.append(score)
+
+plt.xlabel('clusters')
+plt.ylabel('silh')
+plt.bar(range(2,10),silh)
+
+agl = AgglomerativeClustering(n_clusters=5)
+labels = agl.fit_predict(x)
+
+plt.xlabel('annual')
+plt.ylabel('spending')
+plt.scatter(x['Annual Income (k$)'],x['Spending Score (1-100)'],c=labels)
